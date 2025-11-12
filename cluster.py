@@ -19,6 +19,9 @@ def view_bar(num, total):
 
 
 class SemiCluster:
+    """
+    display class
+    """
     def __init__(self, cluster_k, iteration, distance_matrix, p_matrix, r_matrix, st_matrix, ct_matrix):
         self.cluster_k = cluster_k
         self.iteration = iteration
@@ -29,6 +32,8 @@ class SemiCluster:
         self.ct_matrix = ct_matrix
         self.conflict_cnt = 0
         self.loop_cnt = 0
+    # distance_matrix
+    #self.distance_matrix = metrics.get_distance_matrix(self.distance_matrix)
 
     def getdistance(self, index1, index2):
         df = self.distance_matrix
@@ -38,6 +43,9 @@ class SemiCluster:
         num1 = index_all_list.index(index1)
         num2 = index_all_list.index(index2)
         return df.iat[num1, num2]
+
+    # distance_matrix
+    # self.distance_matrix = metrics.get_distance_matrix(self.distance_matrix)
 
     def rule(self, type_dict, type_k, index, must_link_dict, cannot_link_dict, euclidean_distance_list):
         if len(type_dict[type_k]) == 0 or len(type_dict[type_k]) == 1:
@@ -75,7 +83,8 @@ class SemiCluster:
         print('Conflict2!')
         self.conflict_cnt = self.conflict_cnt + 1
         return type_k
-
+    # distance_matrix
+    #self.distance_matrix = metrics.get_distance_matrix(self.distance_matrix)
     def randomGenerateInitList(self, index_all_list, must_link_dict):
         flag = False
         index_init_list = []

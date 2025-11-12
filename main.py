@@ -16,6 +16,8 @@ def avg_data(ST, CT, P, R):
     R  : list[list[str]]  # 文本通道 Recall    结果（带表头）
     返回
     ----
+    ----
+    ----
     AVG: list[list]       # 与输入格式相同，表头保留，其余位置为四源平均
     """
     row, col = len(ST), len(ST[0])
