@@ -96,6 +96,7 @@ class SemiCluster:
                 break
             flag = True
             index_init_list = random.sample(index_all_list, self.cluster_k)
+            # ensure initial medoids do not include points that must stay together
             for index_1 in index_init_list:
                 for index_2 in index_init_list:
                     if index_2 == index_1:
