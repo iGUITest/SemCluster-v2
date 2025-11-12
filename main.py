@@ -37,6 +37,7 @@ def avg_data(ST, CT, P, R):
 
 if __name__ == '__main__':
     # pic dir, image label file, xml dir path
+    # 数据加载，从图像和文本通道获取原始数据
     st_list, ct_list = img.image_main("file/pic_file/",
                                       "file/label_file/demo.csv",
                                       "file/xml_file/")
@@ -46,7 +47,7 @@ if __name__ == '__main__':
 
     # image label file path
     label = "file/label_file/evaluate.csv"
-
+    # 数据格式转换
     p_arr = pd.DataFrame(p_list).values
     p_data = pd.DataFrame(p_arr[1:, 0:], columns=p_arr[0, 0:])
     r_arr = pd.DataFrame(r_list).values
@@ -58,5 +59,6 @@ if __name__ == '__main__':
     all_arr = pd.DataFrame(avg_data(st_list, ct_list, p_list, r_list)).values
     all_data = pd.DataFrame(all_arr[1:, 0:], columns=all_arr[0, 0:])
 
+    # 调用聚类模块进行分析，返回聚类结果
     type_dict = cluster.semi(label, 2, 50, all_data, st_data, ct_data, p_data, r_data)
     print("result:", type_dict)
