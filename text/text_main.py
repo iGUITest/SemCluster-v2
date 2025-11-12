@@ -4,6 +4,7 @@ import numpy as np
 import text.text_feature as rfe
 
 
+
 def del_invalid(p_list, r_list):
     for i in range(1, len(p_list)):
         del p_list[i][1]
