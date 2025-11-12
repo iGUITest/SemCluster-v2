@@ -1,5 +1,5 @@
 # 🔬 SemCluster
-this is SemCluster project.
+This is SemCluster project.
 
 ## 📦 Packages Needed  
 ```
@@ -62,3 +62,5 @@ The extract_report_feature function is the main process of text feature extracti
 #### 📊 report_sim_matrix.py
 
 The feature matrix of the corresponding p and r features is calculated from the obtained text features, and returned.
+
+
