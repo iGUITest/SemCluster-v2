@@ -8,33 +8,51 @@ import image.vgg16_stub as vgg16_stub
 
 threshold = 0.7
 
-
+# Function to calculate Intersection over Union (IoU) between two bounding boxes
+# list1 and list2 represent bounding boxes [x, y, width, height]
+# bias is used to extend the bounding box by a certain margin
 def cal_iou_ok(list1, list2, bias=0):
+    # Extracting coordinates of the bounding boxes
     col_min_a, row_min_a, col_max_a, row_max_a = int(list1[1]), int(list1[0]), \
                                                  int(list1[1] + list1[2]), int(list1[0] + list1[3])
     col_min_b, row_min_b, col_max_b, row_max_b = int(list2[1]), int(list2[0]), \
                                                  int(list2[1] + list2[2]), int(list2[0] + list2[3])
+
+    # Check for no overlap (bounding boxes do not intersect)
     if col_min_a > col_max_b or col_min_b > col_max_a or row_min_a > row_max_b or row_min_b > row_max_a:
         return False
+
+    # Expand the bounding boxes by the bias
     col_min_s = max(col_min_a - bias, col_min_b - bias)
     row_min_s = max(row_min_a - bias, row_min_b - bias)
     col_max_s = min(col_max_a + bias, col_max_b + bias)
     row_max_s = min(row_max_a + bias, row_max_b + bias)
+
+    # Calculate the intersection area
     w = max(0, col_max_s - col_min_s)
     h = max(0, row_max_s - row_min_s)
     inter = w * h
+
+    # Calculate the area of both bounding boxes
     area_a = (col_max_a - col_min_a) * (row_max_a - row_min_a)
     area_b = (col_max_b - col_min_b) * (row_max_b - row_min_b)
+
+    # Calculate IoU
     iou = inter / (area_a + area_b - inter)
+
+    # Return whether the IoU is above the threshold
     return iou >= threshold
 
 
+# Function to check if an image region consists of a pure color (all pixels are the same)
 def is_pure_color(com):
-    baseline = com[0, 0]
+    baseline = com[0, 0]  # Get the color of the top-left pixel
     base_b = baseline[0]
     base_g = baseline[1]
     base_r = baseline[2]
     height, width = com.shape[0], com.shape[1]
+
+    # Check if all pixels are the same color
     for i in range(height):
         for j in range(width):
             cur_pixel = com[i, j]
@@ -46,7 +64,10 @@ def is_pure_color(com):
     return True
 
 
+# Main function to process and compare two XML files and their corresponding images
+# It reads bounding box information from XML files and compares them to calculate similarity
 def process(xmlpath1, xmlpath2, imgpath1, imgpath2):
+    # Parse XML files to extract bounding box information
     dom_obj1 = xmldom.parse(xmlpath1)
     dom_obj2 = xmldom.parse(xmlpath2)
     element_obj1 = dom_obj1.documentElement
@@ -58,6 +79,7 @@ def process(xmlpath1, xmlpath2, imgpath1, imgpath2):
 
     isChange = False
 
+    # Ensure sub_element_obj1 contains more elements than sub_element_obj2
     if len(sub_element_obj1) < len(sub_element_obj2):
         sub_element_obj1, sub_element_obj2 = sub_element_obj2, sub_element_obj1
         isChange = True
@@ -92,6 +114,7 @@ def process(xmlpath1, xmlpath2, imgpath1, imgpath2):
 
     match_pool = []
 
+    # Compare the bounding boxes between the two lists and find matching pairs
     for i in range(len(list_file2_all)):
         for j in range(len(list_file1_all)):
             if cal_iou_ok(list_file1_all[j], list_file2_all[i]) and flags[i] == False:
@@ -103,6 +126,7 @@ def process(xmlpath1, xmlpath2, imgpath1, imgpath2):
                 match_pool.append(list_t)
                 break
 
+    # Read the images corresponding to the XML files
     list_match_com = []
     if isChange:
         img1 = cv2.imread(imgpath2)
@@ -113,6 +137,7 @@ def process(xmlpath1, xmlpath2, imgpath1, imgpath2):
 
     reduce_count = count
 
+    # Extract matching regions from the images and process them
     for i in range(count):
         list_temp = []
         list_pairs = match_pool[i]
@@ -136,8 +161,10 @@ def process(xmlpath1, xmlpath2, imgpath1, imgpath2):
         list_temp.append(com2)
         list_match_com.append(list_temp)
 
+    # Calculate feature distances using VGG16
     distance_list=vgg16.getdistance(list_match_com)
 
+    # Aggregate the distance values
     result = 0
     for i in range(len(distance_list)):
         result += distance_list[i]
@@ -150,7 +177,9 @@ def process(xmlpath1, xmlpath2, imgpath1, imgpath2):
     return result
 
 
+# Function to calculate distance matrix for multiple pairs of XML files and images
 def getCTdis(xml_dir, img_dir, label_csv):
+    # Load the labels from CSV file
     data = pd.read_csv(label_csv, header=None).drop([0])
     title = ["index"]
     xml_list = os.listdir(xml_dir)
@@ -162,6 +191,7 @@ def getCTdis(xml_dir, img_dir, label_csv):
 
     all_dist_list = [title]
 
+    # Calculate distances between all pairs of XML files and images
     for i in range(len(xml_list)):
         dist_list = [data.iloc[i][0]]
         for j in range(len(xml_list)):
