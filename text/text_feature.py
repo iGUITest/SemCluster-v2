@@ -1,10 +1,10 @@
-import jieba
 import gensim
+import jieba
 import numpy as np
 import pandas as pd
 
-from text.text_feature_extraction import dtw as dtw
 import text.text_feature_extraction.text_feature_extraction as tfe
+from text.text_feature_extraction import dtw as dtw
 
 # pre-trained word2ve model
 word2vec_model = gensim.models.Word2Vec.load('text/text_feature_extraction/bugdata_format_model_100')
