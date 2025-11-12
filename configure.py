@@ -1,7 +1,9 @@
 """
 OCR
 """
-
+"""
+OCR
+"""
 APP_ID = '<REPLACE>'
 API_KEY = '<REPLACE>'
 SECRET_KEY = '<REPLACE>'
