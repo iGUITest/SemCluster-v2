@@ -7,12 +7,15 @@ def purity_score(y_true, y_pred):
     y_voted_labels = np.zeros(y_true.shape)
     labels = np.unique(y_true)
     ordered_labels = np.arange(labels.shape[0])
+    
+    # Remap true labels to ordered numerical values
     for k in range(labels.shape[0]):
         y_true[y_true == labels[k]] = ordered_labels[k]
 
     labels = np.unique(y_true)
     bins = np.concatenate((labels, [np.max(labels) + 1]), axis=0)
-
+    
+    # For each cluster, find the most frequent class
     for cluster in np.unique(y_pred):
         hist, _ = np.histogram(y_true[y_pred == cluster], bins=bins)
         winner = np.argmax(hist)
@@ -58,13 +61,15 @@ def metric(label, cluster_k, type_dict):
         index.append(int(df.loc[i][0]))
         ground_truth.append(df.loc[i][5])
         predict.append(df.loc[i][4])
-
+        
+    # Update predictions based on clustering dictionary
     for i in range(1, cluster_k + 1):
         index_list = type_dict[i]
         for k in index_list:
             item = index.index(k)
             predict[item - 1] = i
-
+            
+    # Compute standard clustering metrics
     ARI = metrics.adjusted_rand_score(ground_truth, predict)
     NMI = metrics.normalized_mutual_info_score(ground_truth, predict)
 
