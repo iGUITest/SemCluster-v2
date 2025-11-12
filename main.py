@@ -6,6 +6,18 @@ import text.text_main as txt
 
 
 def avg_data(ST, CT, P, R):
+    """
+    对四种来源的指标矩阵逐格求平均，生成综合评分矩阵。
+    参数
+    ----
+    ST : list[list[str]]  # 图像通道1 结果（带表头）
+    CT : list[list[str]]  # 图像通道2 结果（带表头）
+    P  : list[list[str]]  # 文本通道 Precision 结果（带表头）
+    R  : list[list[str]]  # 文本通道 Recall    结果（带表头）
+    返回
+    ----
+    AVG: list[list]       # 与输入格式相同，表头保留，其余位置为四源平均
+    """
     row, col = len(ST), len(ST[0])
     AVG = [ST[0]]
     for i in range(1, row):
