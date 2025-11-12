@@ -54,13 +54,10 @@ The main function file of the text feature processing part. Get and return the e
 #### 🔍 report_feature_extra.py
 
 The widget_problem_text_sim function calculates text sim between text extracted by OCR from widget images and problem widget text analyzed by text_feature_extra module.
-
 distinguish_widgets function find problem widget image from all widgets by problem_widget text info.
-
 The extract_report_feature function is the main process of text feature extraction.
 
 #### 📊 report_sim_matrix.py
 
 The feature matrix of the corresponding p and r features is calculated from the obtained text features, and returned.
-
 
